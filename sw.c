@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <wait.h>
+#include <sys/wait.h>
 #include <string.h>
 
 
@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
 		char * p_bar;
 		//char * p_period;
 		int last_bar = 0;
-		int last_period = 0;
+		//int last_period = 0;
 		p_bar = strrchr(path_to_file, '/'); //finds last occurrence of "/"
 		if (p_bar != NULL)
 			last_bar = p_bar - path_to_file; 	// last "/" position

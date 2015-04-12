@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <sys/wait.h>
 
 
 #define ERROR 1
@@ -47,18 +48,22 @@ int main(int argc, char * argv[]){
 		}
 		else if (pid > 0){
 			file_counter++;
-			wait(pid);
+			wait(&status);
 		}
 		else{
 
-			fprintf(stderr, "fork error\n"); 
+			fprintf(stderr, "sw fork error\n"); 
 			exit(ERROR);
 		}
 
 
 		
-		wait();
+		wait(&status);
 	}
+
+	
+		execlp("./cscexec", "./cscexec", path_to_dir, NULL);		//executes csc with the file given
+	
 
 
 	exit(OK);

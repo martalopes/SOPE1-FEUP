@@ -1,5 +1,4 @@
-cc -c sw.c
-cc sw.o -o swexec
-cc -c index.c
-cc index.o -o index_exec
+gcc -Wall -o swexec sw.c
+gcc -Wall -o cscexec csc.c
+gcc -Wall -o index_exec index.c
 ./index_exec /home/marta/Documentos/Github/SOPE-projecto/files

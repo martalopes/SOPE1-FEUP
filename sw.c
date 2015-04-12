@@ -4,8 +4,15 @@
 #include <sys/wait.h>
 #include <string.h>
 
+
+#define ERRORPIPE 1
+#define ERRORFORK 1
+#define OK 0
+#define SIZE 255
+
 int main(int argc, char* argv[])
 {
+
 	char *path_to_file = argv[2];
 	char *path_to_wordsfile = argv[1];
 	int filedes[2];
@@ -13,14 +20,14 @@ int main(int argc, char* argv[])
 
 	if (pipe(filedes) < 0) {  // checks pipe error
 		fprintf(stderr, "pipe error\n"); 
-		exit(1); 
+		exit(ERRORPIPE); 
 	} 
 
 	pid_t pid = fork();
 	if (pid < 0) { 		// checks fork error
 
 		fprintf(stderr, "fork error\n"); 
-		exit(1); 
+		exit(ERRORFORK); 
 	} 
 	else if(pid == 0){
 
@@ -33,27 +40,28 @@ int main(int argc, char* argv[])
 
 		close(filedes[1]); // close write
 		FILE* stream = fdopen(filedes[0], "r");
-		char line[40];
+		char line[SIZE];
 
 		//--CREATING A FILE---
 		//finds file name
-		char * pchh;
+		char * p_bar;
+		//char * p_period;
 		int last_bar = 0;
 		int last_period = 0;
-		pchh = strrchr(path_to_file, '/'); //finds last occurrence of "/"
-		if (pchh != NULL)
-			last_bar = pchh - path_to_file; 	// last "/" position
+		p_bar = strrchr(path_to_file, '/'); //finds last occurrence of "/"
+		if (p_bar != NULL)
+			last_bar = p_bar - path_to_file; 	// last "/" position
 		
-		pchh = strchr(path_to_file, '.');	//finds last occurence of "."
-		if(pchh != NULL)
-			last_period = pchh - path_to_file; 		// last "." position
-		int temp1 = strlen(path_to_file) - last_period + 2;
+		/*p_period = strrchr(path_to_file, '.');	//finds last occurence of "."
+		if(p_period != NULL)
+			last_period = p_period - path_to_file; 		// last "." position
+			*/
 
-		char filename[255];
-		strncpy(filename, path_to_file+last_bar+1, temp1);
+		int size_of_name = strlen(path_to_file) - last_bar - 5;
+		char filename[SIZE];
+		strncpy(filename, path_to_file+last_bar+1, size_of_name);
 		strcat(filename, "_index.txt");
 
-		printf("%s\n", filename);
 		FILE * pFile;
 		pFile = fopen(filename, "w");
 
@@ -61,24 +69,25 @@ int main(int argc, char* argv[])
 			
 			//WRITES THE WORD
 			char * pch;  
-			char dest[255]; 
+			char dest[SIZE]; 
 			int nr_colon;
 			
 			pch = strchr(line,':');	// finds first occurrence of ":"
 			nr_colon = pch-line;	// ":" position
 
-			char num[255];			
+			char num[SIZE];			
 			strncpy(num, line, nr_colon); //gets the number of the line where the word is
 			
-			strncpy(dest, pch + 1, strlen(line) ); //copies to dest everything after ":"
+			strncpy(dest, pch+1, strlen(line) ); //copies to dest everything after ":"
 			dest[strlen(dest) - 1] = '\0';
 
 			strcat(dest, " : "); // writes in dest ":"
 
 
 			//WRITES FILE NAME
-			char newdest[255] = "";
-			strncpy(newdest, path_to_file+last_bar+1, temp1); //writes in dest the name of the file
+			char newdest[SIZE] = "";
+
+			strncpy(newdest, path_to_file+last_bar+1, size_of_name); //writes in dest the name of the file
 			strcat(dest, newdest);
 
 			//WRITES NUMBER OF LINE WHERE THE WORD IS
@@ -90,8 +99,6 @@ int main(int argc, char* argv[])
 				strcat(dest, "\n");
 				fputs(dest, pFile);
 			}
-
-
 		}
 
 		fclose(pFile);
@@ -99,5 +106,5 @@ int main(int argc, char* argv[])
 		close(filedes[0]);
 	}
 
-	return 0;
+	exit(OK);
 }

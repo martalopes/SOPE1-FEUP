@@ -3,12 +3,14 @@
 #include <unistd.h>
 #include <string.h>
 
+
 #define ERROR 1
 #define OK 0
 
 int main(int argc, char * argv[]){
 
 	char * path_to_dir = argv[1];
+	int status;
 
 	//-----------creates the path to words.txt------------
 	char path_to_words[strlen(path_to_dir)+10];	

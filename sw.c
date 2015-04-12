@@ -43,14 +43,17 @@ int main(int argc, char* argv[])
 		pchh = strrchr(path_to_file, '/'); //finds last occurrence of "/"
 		if (pchh != NULL)
 			last_bar = pchh - path_to_file; 	// last "/" position
-		pchh = strrchr(path_to_file, '.');	//finds last occurence of "."
+		
+		pchh = strchr(path_to_file, '.');	//finds last occurence of "."
 		if(pchh != NULL)
 			last_period = pchh - path_to_file; 		// last "." position
+		int temp1 = strlen(path_to_file) - last_period + 2;
 
 		char filename[255];
-		strncpy(filename, path_to_file+last_bar, last_period);
+		strncpy(filename, path_to_file+last_bar+1, temp1);
 		strcat(filename, "_index.txt");
 
+		printf("%s\n", filename);
 		FILE * pFile;
 		pFile = fopen(filename, "w");
 
@@ -74,8 +77,8 @@ int main(int argc, char* argv[])
 
 
 			//WRITES FILE NAME
-			char newdest[255];
-			strncpy(newdest, path_to_file+last_bar, last_period); //writes in dest the name of the file
+			char newdest[255] = "";
+			strncpy(newdest, path_to_file+last_bar+1, temp1); //writes in dest the name of the file
 			strcat(dest, newdest);
 
 			//WRITES NUMBER OF LINE WHERE THE WORD IS

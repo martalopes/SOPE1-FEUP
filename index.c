@@ -52,7 +52,7 @@ int main(int argc, char * argv[]){
 		}
 		else{
 
-			fprintf(stderr, "sw fork error\n"); 
+			fprintf(stderr, "INDEX: sw fork error\n"); 
 			exit(ERROR);
 		}
 

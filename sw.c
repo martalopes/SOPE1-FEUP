@@ -19,14 +19,14 @@ int main(int argc, char* argv[])
 	int status;
 
 	if (pipe(filedes) < 0) {  // checks pipe error
-		fprintf(stderr, "pipe error\n"); 
+		fprintf(stderr, "SW: pipe error\n"); 
 		exit(ERRORPIPE); 
 	} 
 
 	pid_t pid = fork();
 	if (pid < 0) { 		// checks fork error
 
-		fprintf(stderr, "fork error\n"); 
+		fprintf(stderr, "SW: fork error\n"); 
 		exit(ERRORFORK); 
 	} 
 	else if(pid == 0){
@@ -45,17 +45,10 @@ int main(int argc, char* argv[])
 		//--CREATING A FILE---
 		//finds file name
 		char * p_bar;
-		//char * p_period;
 		int last_bar = 0;
-		//int last_period = 0;
 		p_bar = strrchr(path_to_file, '/'); //finds last occurrence of "/"
 		if (p_bar != NULL)
 			last_bar = p_bar - path_to_file; 	// last "/" position
-		
-		/*p_period = strrchr(path_to_file, '.');	//finds last occurence of "."
-		if(p_period != NULL)
-			last_period = p_period - path_to_file; 		// last "." position
-			*/
 
 		int size_of_name = strlen(path_to_file) - last_bar - 5;
 		char filename[SIZE];

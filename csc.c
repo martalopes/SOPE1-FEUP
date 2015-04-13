@@ -119,18 +119,66 @@ int main(int argc, char * argv[]){
 	FILE* sorted_input = fopen(temp_index_path, "r");
 	FILE* sorted_output = fopen(path_to_index, "w");
 
-
 	if(sorted_output  == NULL)
 		fclose(sorted_output);
 
 	if(sorted_input == NULL)
 		fclose(sorted_input);
 
-	/*while(fgets(line, SIZE, stream) != NULL)
-		fputs(line, sorted_output );
+	char name[1000] = ""; 
 	
-*/
 
+	while(fgets(line, SIZE, sorted_input) != NULL){
+		char name2[SIZE] = "";
+		int i = 0;
+
+		while(line[i] != ' '){
+			
+			if(i == SIZE){
+				break;
+			}
+
+			name2[i] = line[i];
+
+			i++;
+		}
+
+		int size_n2 = i;
+		printf("\n%s\n%d\n", name2, size_n2);
+		name2[size_n2] = '\0';
+
+
+
+		if(strncmp(name, name2, strlen(name2)) != 0)
+		{
+			strcat(name, "\n");
+			fputs(name, sorted_output);
+
+			
+			name[0] = '\0';
+			
+
+			strncpy(name, name2, strlen(name2));
+			strcat(name, " : ");
+
+			char tmp[25] = "";
+			strncpy(tmp, line + strlen(name2) + 2 , strlen(line) - 3 - strlen(name2));
+			strcat(name, tmp);
+		}
+		else{
+
+			char tmp[25] = "";
+			
+			strncpy(tmp, line + strlen(name2) + 2, strlen(line) - 3 - strlen(name2));
+			strcat(name, " , ");
+			strcat(name, tmp);
+		}
+
+		
+
+	}
+
+		
 	fclose(sorted_output);
 	fclose(sorted_input);
 	

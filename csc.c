@@ -125,7 +125,7 @@ int main(int argc, char * argv[]){
 	if(sorted_input == NULL)
 		fclose(sorted_input);
 
-	char name[1000] = ""; 
+	char * name = malloc(SIZE * sizeof(char));
 	
 
 	while(fgets(line, SIZE, sorted_input) != NULL){
@@ -155,7 +155,7 @@ int main(int argc, char * argv[]){
 			fputs(name, sorted_output);
 
 			
-			name[0] = '\0';
+			name = malloc(SIZE * sizeof(char));
 			
 
 			strncpy(name, name2, strlen(name2));

@@ -57,7 +57,7 @@ int main(int argc, char * argv[]){
 
 
 
-	//**REMOVES FILE**
+	//REMOVES FILE
 	pid_t pidd = fork();
 
 	if(pidd < 0){
@@ -74,7 +74,7 @@ int main(int argc, char * argv[]){
 	file_counter++;
 	}	
 
-//******************************************************************
+//--------------------------
 
 	close(filedes[1]); // close write
 
@@ -91,8 +91,7 @@ int main(int argc, char * argv[]){
 		fputs(line, output);
 	
 	fclose(output);
-	//***************************
-
+	//--------------------------
 	//SORTS THE FILE BY ALPHABETICAL ORDER
 	char * temp_index_path = malloc((strlen(path_to_index) + 4) * sizeof(char));
 	strncpy(temp_index_path,  path_to_index, strlen(path_to_index) - 4);
@@ -109,7 +108,7 @@ int main(int argc, char * argv[]){
 	}
 	else
 		wait(&status);
-	//**********************************
+	//--------------------------
 
 
 	//WRITES ON THE OUTPUT FILE SORTED
@@ -176,21 +175,22 @@ int main(int argc, char * argv[]){
 	//REMOVES TEMPORARY INDEX
 	pid_t pidf = fork();
 
-	if(pidf < 0){
-		fprintf(stderr, "CSC: second fork error\n"); 
+	if(pidf < 0){		//check for fork errors
+		fprintf(stderr, "CSC: forth fork error\n"); 
 		exit(ERRORFORK); 
 	}
 	else if(pidf == 0){
-		execlp("rm", "rm", temp_index_path, NULL);
-	}
+			execlp("rm", "rm", temp_index_path, NULL);
+		}
 	else
 		wait(&status);
+	//--------------------------
 	
-	//**********************
 
 	fclose(sorted_output);
 	fclose(sorted_input);
 	
+
 
 	exit(OK);
 

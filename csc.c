@@ -13,47 +13,47 @@
 int main(int argc, char * argv[]){
 	
 	int status;
-
 	int filedes[2];
 
-	if(pipe(filedes) < 0){
+	if(pipe(filedes) < 0){     //check for pipe erros
 
 		fprintf(stderr, "\n CSC: pipe error\n");
 		exit(ERRORPIPE);
 	}
 
-
-	char *path_to_dir = argv[1];
-	char path_to_index[strlen(path_to_dir) + strlen("/index.txt")];
+	char *path_to_dir = argv[1];	//the user gives the path to the directory where the files are
+	
+	//creates path to index
+	char path_to_index[strlen(path_to_dir) + strlen("/index.txt")]; 
 	strncpy(path_to_index, path_to_dir, strlen(path_to_dir));
 	strcat(path_to_index, "/index.txt");
 
 //INSERTS THE CONTENT OF THE FILE ON PIPE AND REMOVES THE FILE
 	char filename[SIZE] = "";
-	int file_counter = 1;
+	int file_counter = 1;		
 
 	while(1)
 	{
-		sprintf(filename, "%d", file_counter);
+		sprintf(filename, "%d", file_counter);		//int to string to get the name of the file
 		strcat(filename, "_index.txt");
 
-		if(access(filename, F_OK) != 0)
+		if(access(filename, F_OK) != 0)				//checks if the file exists
 			break;
 
 
 	pid_t pid = fork();
 
-	if(pid < 0){
+	if(pid < 0){		//checks for fork errors
 		fprintf(stderr, "CSC: first fork error\n"); 
 		exit(ERRORFORK); 
 	}
 	else if(pid == 0){
-		close(filedes[0]); // close read  
+		close(filedes[0]); // CLOSE READ
 		dup2(filedes[1], STDOUT_FILENO);
-		execlp("cat", "cat", filename, NULL);
+		execlp("cat", "cat", filename, NULL); //concatenates all the files
 	}
 	else
-		wait(&status);
+		wait(&status);	//waits for son
 
 
 
@@ -76,9 +76,6 @@ int main(int argc, char * argv[]){
 
 //******************************************************************
 
-
-
-	
 	close(filedes[1]); // close write
 
 	FILE* stream = fdopen(filedes[0], "r"); // reads everything that is on the pipe
@@ -96,14 +93,14 @@ int main(int argc, char * argv[]){
 	fclose(output);
 	//***************************
 
-	//SORTS
+	//SORTS THE FILE BY ALPHABETICAL ORDER
 	char * temp_index_path = malloc((strlen(path_to_index) + 4) * sizeof(char));
 	strncpy(temp_index_path,  path_to_index, strlen(path_to_index) - 4);
 	strcat(temp_index_path, "_temp.txt");
 	
 	pid_t pid = fork();
 
-	if(pid < 0){
+	if(pid < 0){		//check for fork errors
 		fprintf(stderr, "CSC: third fork error\n"); 
 		exit(ERRORFORK); 
 	}
@@ -112,7 +109,7 @@ int main(int argc, char * argv[]){
 	}
 	else
 		wait(&status);
-	//*******
+	//**********************************
 
 
 	//WRITES ON THE OUTPUT FILE SORTED
@@ -127,8 +124,9 @@ int main(int argc, char * argv[]){
 
 	char * name = malloc((SIZE+1) * sizeof(char));
 	
-	fputs("INDEX", sorted_output);
+	fputs("INDEX", sorted_output);	
 
+	//Begins to write everything with the right format
 	while(fgets(line, SIZE, sorted_input) != NULL){
 		
 
@@ -147,7 +145,7 @@ int main(int argc, char * argv[]){
 		
 		name2[size_n2] = '\0';
 
-		if(strncmp(name, name2, strlen(name2)) != 0)
+		if(strncmp(name, name2, strlen(name2)) != 0) //if the word is not the same writes the new word
 		{
 			strcat(name, "\n\n");
 			fputs(name, sorted_output);
@@ -161,7 +159,7 @@ int main(int argc, char * argv[]){
 			strncpy(tmp, line + strlen(name2) + 3 , strlen(line) - 4 - strlen(name2));
 			strcat(name, tmp);
 		}
-		else{
+		else{ //if the word is the same, writes the info
 
 			char tmp[25] = "";
 			
@@ -193,9 +191,6 @@ int main(int argc, char * argv[]){
 	fclose(sorted_output);
 	fclose(sorted_input);
 	
-
-
-
 
 	exit(OK);
 

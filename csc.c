@@ -171,11 +171,29 @@ int main(int argc, char * argv[]){
 		}
 	}
 
+	char lastn[10] = "\n";
 	fputs(name, sorted_output);
+	fputs(lastn, sorted_output);
+
+	//REMOVES TEMPORARY INDEX
+	pid_t pidf = fork();
+
+	if(pidf < 0){
+		fprintf(stderr, "CSC: second fork error\n"); 
+		exit(ERRORFORK); 
+	}
+	else if(pidf == 0){
+		execlp("rm", "rm", temp_index_path, NULL);
+	}
+	else
+		wait(&status);
+	
+	//**********************
+
 	fclose(sorted_output);
 	fclose(sorted_input);
 	
-	//*********************************
+
 
 
 

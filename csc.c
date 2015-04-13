@@ -125,60 +125,53 @@ int main(int argc, char * argv[]){
 	if(sorted_input == NULL)
 		fclose(sorted_input);
 
-	char * name = malloc(SIZE * sizeof(char));
+	char * name = malloc((SIZE+1) * sizeof(char));
 	
+	fputs("INDEX", sorted_output);
 
 	while(fgets(line, SIZE, sorted_input) != NULL){
+		
+
 		char name2[SIZE] = "";
 		int i = 0;
 
 		while(line[i] != ' '){
-			
 			if(i == SIZE){
 				break;
 			}
-
 			name2[i] = line[i];
-
 			i++;
 		}
 
 		int size_n2 = i;
-		printf("\n%s\n%d\n", name2, size_n2);
+		
 		name2[size_n2] = '\0';
-
-
 
 		if(strncmp(name, name2, strlen(name2)) != 0)
 		{
-			strcat(name, "\n");
+			strcat(name, "\n\n");
 			fputs(name, sorted_output);
 
-			
-			name = malloc(SIZE * sizeof(char));
-			
-
-			strncpy(name, name2, strlen(name2));
-			strcat(name, " : ");
+			name = malloc((SIZE+1) * sizeof(char));
+		
+			strncpy(name, name2, (strlen(name2)+1));
+			strcat(name, ": ");
 
 			char tmp[25] = "";
-			strncpy(tmp, line + strlen(name2) + 2 , strlen(line) - 3 - strlen(name2));
+			strncpy(tmp, line + strlen(name2) + 3 , strlen(line) - 4 - strlen(name2));
 			strcat(name, tmp);
 		}
 		else{
 
 			char tmp[25] = "";
 			
-			strncpy(tmp, line + strlen(name2) + 2, strlen(line) - 3 - strlen(name2));
-			strcat(name, " , ");
+			strncpy(tmp, line + strlen(name2) + 3, strlen(line) - 4 - strlen(name2));
+			strcat(name, ", ");
 			strcat(name, tmp);
 		}
-
-		
-
 	}
 
-		
+	fputs(name, sorted_output);
 	fclose(sorted_output);
 	fclose(sorted_input);
 	

@@ -10,26 +10,32 @@
 
 int main(int argc, char * argv[]){
 
-	char * path_to_dir = argv[1];
 	int status;
+	char * path_to_dir = malloc(sizeof(char) * (strlen(argv[1]) + 10));
+
+	if (argv[1][strlen(argv[1])-1] == '/')
+		strncpy(path_to_dir, argv[1], strlen(argv[1]) - 1);
+	else
+		strcpy(path_to_dir, argv[1]);
+
+	
 
 	//-----------creates the path to words.txt------------
-	char path_to_words[strlen(path_to_dir)+10];	
+	char * path_to_words = malloc(sizeof(char) * (strlen(argv[1]) + 10));
+
 	strncpy(path_to_words, path_to_dir, strlen(path_to_dir));
 	strcat(path_to_words, "/words.txt");
-
 
 	if(access(path_to_words, F_OK) != 0) //checks if the file exists
 		exit(ERROR);
 
-	int file_counter = 1;
-	
-
+	int file_counter = 1;	
 
 	while(1){
-		char fname[33] = "";
+		
+		char fname[50] = "";
 		sprintf(fname, "%d", file_counter); 	//int to string, to get the name of the next file
-		char * path_to_file = malloc(strlen(path_to_dir) * sizeof(char));
+		char * path_to_file = malloc((40 + strlen(path_to_dir)) * sizeof(char));
 		
 		//-----------creates the path to the file------------
 		strncpy(path_to_file, path_to_dir, strlen(path_to_dir));
@@ -43,7 +49,7 @@ int main(int argc, char * argv[]){
 		pid_t pid = fork();
 
 		if(pid == 0){	
-			execlp("./swexec", "./swexec", path_to_words, path_to_file, NULL);		//executes sw with the file given
+			execlp("./bin/swexec", "./bin/swexec", path_to_words, path_to_file, NULL);		//executes sw with the file given
 
 		}
 		else if (pid > 0){
@@ -51,7 +57,6 @@ int main(int argc, char * argv[]){
 			wait(&status);
 		}
 		else{
-
 			fprintf(stderr, "INDEX: sw fork error\n"); 
 			exit(ERROR);
 		}
@@ -61,8 +66,7 @@ int main(int argc, char * argv[]){
 		wait(&status);
 	}
 
-	
-		execlp("./cscexec", "./cscexec", path_to_dir, NULL);		//executes csc with the file given
+		execlp("./bin/cscexec", "./bin/cscexec", path_to_dir, NULL);		//executes csc with the file given
 	
 
 
